@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getCampaigns } from '../services/budgetManagerApi'
 import { getLandings, getLandingLeads } from '../services/landingCrmApi'
+import ClientFilter from '../components/ClientFilter'
 
 const sum = (items, key) => items.reduce((total, item) => total + (Number(item[key]) || 0), 0)
 const formatMoney = value => `$${value.toLocaleString('es-AR')}`
@@ -56,19 +57,7 @@ export default function Dashboard() {
     <main className="page">
       <h1>Dashboard</h1>
 
-      <div className="client-filter">
-        <label htmlFor="client-select">Empresa</label>
-        <select
-          id="client-select"
-          value={client}
-          onChange={e => setClient(e.target.value)}
-        >
-          <option value="">Todas las empresas</option>
-          {clients.map(name => (
-            <option key={name} value={name}>{name}</option>
-          ))}
-        </select>
-      </div>
+      <ClientFilter clients={clients} value={client} onChange={setClient} />
 
       <section>
         <h2>Campañas</h2>

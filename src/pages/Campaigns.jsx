@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getCampaigns } from '../services/budgetManagerApi'
+import ClientFilter from '../components/ClientFilter'
 
 const STATUS_BADGE = {
   activa:   'badge-active',
@@ -10,6 +11,7 @@ const STATUS_BADGE = {
 
 export default function Campaigns() {
   const [campaigns, setCampaigns] = useState([])
+  const [client, setClient]       = useState('')
   const [loading, setLoading]     = useState(true)
   const [error, setError]         = useState(null)
 
@@ -20,6 +22,15 @@ export default function Campaigns() {
       .finally(() => setLoading(false))
   }, [])
 
+  const clients = useMemo(() => {
+    const names = campaigns.map(item => item.client).filter(Boolean)
+    return [...new Set(names)].sort()
+  }, [campaigns])
+
+  const filteredCampaigns = client
+    ? campaigns.filter(c => c.client === client)
+    : campaigns
+
   if (loading) return <p className="state-msg">Cargando campañas...</p>
   if (error)   return <p className="state-msg error">Error: {error.message}</p>
 
@@ -28,11 +39,11 @@ export default function Campaigns() {
       <h1>Campañas</h1>
 
       {/* TODO GD-F02: agregar filtro por estado y por cliente */}
-      {/* TODO GD-F05: selector de cliente */}
+      <ClientFilter clients={clients} value={client} onChange={setClient} />
 
       <div className="item-list">
-        {campaigns.length === 0 && <p className="state-msg">No hay campañas registradas.</p>}
-        {campaigns.map(c => (
+        {filteredCampaigns.length === 0 && <p className="state-msg">No hay campañas registradas.</p>}
+        {filteredCampaigns.map(c => (
           <div key={c.id} className="item-card">
             <div>
               <div className="item-name">{c.name}</div>

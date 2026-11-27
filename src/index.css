@@ -139,3 +139,19 @@ body {
 .badge-draft   { background: #e9ecef; color: #495057; }
 .badge-paused  { background: #fff3cd; color: #664d03; }
 .badge-closed  { background: #f8d7da; color: #842029; }
+
+.client-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.landing-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.landing-link:hover {
+  text-decoration: underline;
+}
